@@ -1,0 +1,40 @@
+name: HostInfinity CI Pipeline
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-site:
+    name: Build Site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build step
+        run: echo "Building HostInfinity project..."
+
+  test-site:
+    name: Test Site
+    runs-on: ubuntu-latest
+    needs: build-site   # 🔗 Connects Build → Test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: PHP Syntax Test
+        run: |
+          php -l Index.php
+          php -l Process_Form.php
+
+  deploy-site:
+    name: Deploy Site
+    runs-on: ubuntu-latest
+    needs: test-site    # 🔗 Connects Test → Deploy
+
+    steps:
+      - name: Deploy simulation
+        run: echo "Deploying project to InfinityFree via FTP..."
